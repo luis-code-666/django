@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
+from .forms import TaskForm
 
 # Create your views here.
 
@@ -27,7 +28,7 @@ def signup(request):
             except IntegrityError:
                 return render(request, 'signup.html', {
                     'form': UserCreationForm,
-                    "error": 'Username already exists'
+                    'error': 'Username already exists'
                 })
                             
         return render(request, 'signup.html', {
@@ -37,6 +38,26 @@ def signup(request):
 
 def tasks(request):
     return render(request, 'tasks.html')
+
+def create_task(request):
+    
+    if request.method == 'GET':
+        return render(request, 'create_task.html',{
+            'form': TaskForm
+        })
+    else:
+        try:
+            form = TaskForm(request.POST)
+            new_task = form.save(commit=False)
+            new_task.user = request.user
+            new_task.save()
+            return redirect('tasks')
+        except:
+            return render(request, 'create_task.html',{
+                'form': TaskForm,
+                'error': 'Plase provide valida data'
+            })
+    
 
 def signout(request):
     logout(request)
