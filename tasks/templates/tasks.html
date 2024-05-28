@@ -2,10 +2,15 @@
 
 {% block content %}
 
-<h1> tasks </h1>
+<h1> Tasks </h1>
 <ul>
     {% for task in tasks %}
-    <li>{{task.title}}</li>
+    <li>
+        <h1> {{task.title}} </h1>
+        <p>{{task.description}}</p>
+        <p>{{task.user.username}}</p>
+
+    </li>
     {% endfor%}
 </ul>
 
